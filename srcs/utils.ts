@@ -75,4 +75,32 @@ export class Utils {
 
         return true;
     }
+
+    public deleteDirectory({ path }: { path: string }) {
+        if (path === '/') {
+            Object.keys(this.root).forEach(key => delete this.root[key]);
+            this.saveState();
+            console.log('Root has been deleted.');
+            return;
+        }
+
+        const parts = path.split('/');
+        let current = this.root;
+
+        for (let part of parts.slice(0, -1)) {
+            if (!current[part]) {
+                console.log(`Cannot delete ${path} - directory does not exist.`);
+                return;
+            }
+            current = current[part];
+        }
+
+        const dirToDelete = parts[parts.length - 1];
+        if (current[dirToDelete]) {
+            delete current[dirToDelete];
+            this.saveState();
+        } else {
+            console.log(`Cannot delete ${path} - directory does not exist.`);
+        }
+    }
 }
