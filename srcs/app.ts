@@ -42,7 +42,13 @@ class App {
                         }
                         break;
                     case ActionCommands.MOVE: {
-                        break
+                        if (args.length === 2) {
+                            this.utils.moveDirectory({ sourcePath: args[0], targetPath: args[1] });
+                            this.utils.saveState();
+                        } else {
+                            console.log("Please provide source and target directories.");
+                        }
+                        break;
                     }
                     case ActionCommands.DELETE: {
                         if (args.length) {
