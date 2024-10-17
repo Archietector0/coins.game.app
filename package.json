@@ -1,0 +1,22 @@
+{
+  "name": "coins.game.app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "start": "npm run build && node ./build/app.js",
+    "build": "tsc --build",
+    "test": "jest --verbose --passWithNoTests"
+  },
+  "author": "Archie_0",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^20.8.5",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
