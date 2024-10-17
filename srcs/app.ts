@@ -45,7 +45,13 @@ class App {
                         break
                     }
                     case ActionCommands.DELETE: {
-                        break
+                        if (args.length) {
+                            this.utils.deleteDirectory({ path: args[0] });
+                            this.utils.saveState();
+                        } else {
+                            console.log("Please provide a directory name to delete.");
+                        }
+                        break;
                     }
                     case ActionCommands.LIST: {
                         break
