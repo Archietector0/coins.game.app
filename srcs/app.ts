@@ -54,7 +54,12 @@ class App {
                         break;
                     }
                     case ActionCommands.LIST: {
-                        break
+                        if (args.length > 0) {
+                            console.log("Unexpected values after the LIST command.");
+                        } else {
+                            this.utils.listDirectories({});
+                        }
+                        break;
                     }
                     default: {
                         console.log(`Unknown command: ${action}`);
