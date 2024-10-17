@@ -4,3 +4,7 @@ export enum ActionCommands {
     DELETE = 'DELETE',
     LIST = 'LIST',
 }
+
+export type Directory = {
+    [name: string]: Directory
+};
