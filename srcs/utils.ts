@@ -76,6 +76,17 @@ export class Utils {
         return true;
     }
 
+    public listDirectories({ directory = this.root, indent = '' }: { directory?: Directory, indent?: string }): void {
+        if (Object.keys(directory).length === 0) {
+            return;
+        }
+    
+        Object.keys(directory).forEach(dir => {
+            console.log(`${indent}${dir}`);
+            this.listDirectories({ directory: directory[dir], indent: indent + '  ' });
+        });
+    }
+
     public deleteDirectory({ path }: { path: string }) {
         if (path === '/') {
             Object.keys(this.root).forEach(key => delete this.root[key]);
