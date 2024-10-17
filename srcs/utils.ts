@@ -87,6 +87,56 @@ export class Utils {
         });
     }
 
+    public moveDirectory({ sourcePath, targetPath }: { sourcePath: string, targetPath: string }) {
+        const sourceParts = sourcePath.split('/');
+        let sourceDir = this.root;
+
+        for (let part of sourceParts.slice(0, -1)) {
+            if (!sourceDir[part]) {
+                console.log(`Source directory "${sourcePath}" not found.`);
+                return;
+            }
+            sourceDir = sourceDir[part];
+        }
+
+        const dirToMove = sourceParts[sourceParts.length - 1];
+
+        if (!sourceDir[dirToMove]) {
+            console.log(`Directory "${sourcePath}" not found.`);
+            return;
+        }
+
+        if (targetPath === '/') {
+            if (this.root[dirToMove]) {
+                console.log(`Directory "${dirToMove}" already exists in the root.`);
+                return;
+            }
+
+            this.root[dirToMove] = sourceDir[dirToMove];
+            delete sourceDir[dirToMove];
+            console.log(`Moved "${sourcePath}" to the root.`);
+            return;
+        }
+
+        const targetParts = targetPath.split('/');
+        let targetDir = this.root;
+
+        for (let part of targetParts) {
+            if (!targetDir[part]) {
+                console.log(`Target directory "${targetPath}" not found.`);
+                return;
+            }
+            targetDir = targetDir[part];
+        }
+
+        if (targetDir[dirToMove]) {
+            console.log(`Directory "${dirToMove}" already exists in "${targetPath}".`);
+        } else {
+            targetDir[dirToMove] = sourceDir[dirToMove];
+            delete sourceDir[dirToMove];
+        }
+    }
+
     public deleteDirectory({ path }: { path: string }) {
         if (path === '/') {
             Object.keys(this.root).forEach(key => delete this.root[key]);
