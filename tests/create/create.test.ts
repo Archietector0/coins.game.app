@@ -1,13 +1,33 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Directory } from "../../srcs/types";
 import { Utils } from "../../srcs/utils";
+
+const filePath = path.join(__dirname, '../../state.json');
 
 describe('Utils - createDirectory', () => {
   let utils: Utils;
   let root: Directory;
 
+  beforeAll(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  afterAll(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   beforeEach(() => {
     root = {};
     utils = new Utils(root);
+  });
+
+  afterEach(() => {
+    Object.keys(root).forEach(key => delete root[key]);
   });
 
   test('should create a valid directory', () => {
