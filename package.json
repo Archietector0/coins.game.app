@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "npm run build && node ./build/app.js",
+    "start": "npm run build && node ./build/srcs/app.js",
     "build": "tsc --build",
     "test": "jest --verbose --passWithNoTests"
   },
