@@ -1,9 +1,25 @@
-import { Utils } from '../../srcs/utils';
-import { Directory } from '../../srcs/types';
+import path from "path";
+import { Directory } from "../../srcs/types";
+import { Utils } from "../../srcs/utils";
+import * as fs from 'fs';
+
+const filePath = path.join(__dirname, '../../state.json');
 
 describe('Utils - listDirectories', () => {
   let utils: Utils;
   let root: Directory;
+
+  beforeAll(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  afterAll(() => {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  });
 
   beforeEach(() => {
     root = {
