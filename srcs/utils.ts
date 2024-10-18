@@ -76,92 +76,101 @@ export class Utils {
         return true;
     }
 
-    public listDirectories({ directory = this.root, indent = '' }: { directory?: Directory, indent?: string }): void {
+    public listDirectories({ directory = this.root, indent = '' }: { directory?: Directory, indent?: string }): boolean {
         if (Object.keys(directory).length === 0) {
-            return;
+            return false;
         }
     
         Object.keys(directory).forEach(dir => {
             console.log(`${indent}${dir}`);
             this.listDirectories({ directory: directory[dir], indent: indent + '  ' });
         });
+        return true;
     }
 
-    public moveDirectory({ sourcePath, targetPath }: { sourcePath: string, targetPath: string }) {
+    public moveDirectory({ sourcePath, targetPath }: { sourcePath: string, targetPath: string }): boolean {
         const sourceParts = sourcePath.split('/');
         let sourceDir = this.root;
-
+    
         for (let part of sourceParts.slice(0, -1)) {
             if (!sourceDir[part]) {
                 console.log(`Source directory "${sourcePath}" not found.`);
-                return;
+                return false;
             }
             sourceDir = sourceDir[part];
         }
-
+    
         const dirToMove = sourceParts[sourceParts.length - 1];
-
+    
         if (!sourceDir[dirToMove]) {
             console.log(`Directory "${sourcePath}" not found.`);
-            return;
+            return false;
         }
-
+    
+        if (targetPath.startsWith(`${sourcePath}/`)) {
+            console.log(`Cannot move directory "${sourcePath}" into its child "${targetPath}".`);
+            return false;
+        }
+    
         if (targetPath === '/') {
             if (this.root[dirToMove]) {
                 console.log(`Directory "${dirToMove}" already exists in the root.`);
-                return;
+                return false;
             }
-
+    
             this.root[dirToMove] = sourceDir[dirToMove];
             delete sourceDir[dirToMove];
-            console.log(`Moved "${sourcePath}" to the root.`);
-            return;
+            return true;
         }
-
+    
         const targetParts = targetPath.split('/');
         let targetDir = this.root;
-
+    
         for (let part of targetParts) {
             if (!targetDir[part]) {
                 console.log(`Target directory "${targetPath}" not found.`);
-                return;
+                return false;
             }
             targetDir = targetDir[part];
         }
-
+    
         if (targetDir[dirToMove]) {
             console.log(`Directory "${dirToMove}" already exists in "${targetPath}".`);
+            return false;
         } else {
             targetDir[dirToMove] = sourceDir[dirToMove];
             delete sourceDir[dirToMove];
+            return true;
         }
     }
 
-    public deleteDirectory({ path }: { path: string }) {
+    public deleteDirectory({ path }: { path: string }): boolean {
         if (path === '/') {
             Object.keys(this.root).forEach(key => delete this.root[key]);
             this.saveState();
             console.log('Root has been deleted.');
-            return;
+            return true;
         }
-
+    
         const parts = path.split('/');
         let current = this.root;
-
+    
         for (let part of parts.slice(0, -1)) {
             if (!current[part]) {
                 console.log(`Cannot delete ${path} - directory does not exist.`);
-                return;
+                return false;
             }
             current = current[part];
         }
-
+    
         const dirToDelete = parts[parts.length - 1];
         if (current[dirToDelete]) {
             delete current[dirToDelete];
             this.saveState();
+            return true;
         } else {
             console.log(`Cannot delete ${path} - directory does not exist.`);
+            return false;
         }
     }
 }
